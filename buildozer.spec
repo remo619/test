@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy,kivymd,python3=3.9.0,numpy,opencv-python,python2
+requirements = kivy,kivymd,python3==3.9.0,numpy,opencv-python,python2
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -62,7 +62,7 @@ orientation = portrait
 #
 
 #
-# author = © Copyright Info
+# author = ShivaPrasad © Copyright Info
 
 #
 # Android specific
@@ -72,7 +72,7 @@ orientation = portrait
 fullscreen = 0
 
 # (list) Permissions
-android.permissions = CAMERA
+android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
 # (int) Android API to use
 #android.api = 19

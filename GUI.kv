@@ -1,11 +1,11 @@
 MDScreen:
-    MDTopAppBar:
-        title:"See with Ears"
-        left_action_items: [["menu", lambda x:nav_draw.set_state()]]
-
-    MDBoxLayout:
+    BoxLayout:
         orientation:"vertical"
-    Widget:
+        MDTopAppBar:
+            title:"See with Ears"
+            left_action_items: [["menu", lambda x:nav_draw.set_state()]]
+            elevation: 10
+        Widget:
 
     MDNavigationDrawer:
         id: nav_draw
@@ -17,7 +17,7 @@ MDScreen:
             anchor_y: "top"
             MDBoxLayout:
                 adaptive_height: True
-                orientation:"horizontal"
+                orientation:"vertical"
                 MDIconButton:
                     icon:"information"
                     icon_size: "32sp"
@@ -33,5 +33,5 @@ MDScreen:
                     font_style: "Caption"
                     size_hint_y: None
                     height : self.texture_size[1]
-                    #valign: "center"
+                            #valign: "center"
     Widget:

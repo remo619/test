@@ -3,6 +3,7 @@ from kivymd.app import MDApp
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.toolbar.toolbar import MDTopAppBar
 from datetime import datetime as dt
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -35,16 +36,15 @@ class KivyCamera(Image):
             # display image from the texture
             self.texture = image_texture
 
-
 class CamApp(MDApp):
     def build(self):
-        Window.size= [300,600]
+        #Window.size= [300,600]
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Orange"
         self.capture = cv2.VideoCapture(0)
         self.my_camera = KivyCamera(capture=self.capture, fps=30)
         Screen = Builder.load_file("GUI.kv")
-        Screen.add_widget(self.my_camera,2)
+        Screen.add_widget(self.my_camera,3)
         return Screen
 
     def on_stop(self):

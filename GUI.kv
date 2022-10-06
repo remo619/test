@@ -21,7 +21,6 @@ MDScreen:
                 icon: "signal-distance-variant"
                 text:"Estimate Distance"
                 text_color: "black"
-
                 icon_color: "orange"
                 line_color: "green"
             MDRectangleFlatIconButton:
@@ -29,8 +28,8 @@ MDScreen:
                 text:"Exit"
                 text_color: "black"
                 line_color: "red"
-
                 icon_color: "orange"
+                on_release: app.close_application()
 
 
     MDNavigationDrawer:

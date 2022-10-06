@@ -7,9 +7,9 @@ from kivymd.uix.toolbar.toolbar import MDTopAppBar
 from datetime import datetime as dt
 from kivy.clock import Clock
 from kivy.lang import Builder
-#from kivy.uix.camera import Camera
+from kivy.uix.camera import Camera
 import numpy as np
-from kivy_garden.xcamera import XCamera
+#from kivy_garden.xcamera import XCamera
 from kivy.graphics.texture import Texture
 import cv2
 if platform=="android":
@@ -20,37 +20,48 @@ if platform=="android":
         Permission.READ_EXTERNAL_STORAGE
     ])
 
-class AndroidCam(XCamera):
-    camera_resolution = w,h =(640,480)
+class AndroidCam(Camera):
+    resolution = w,h =(640,480)
 
     def __init__(self,**kwargs):
         super(AndroidCam,self).__init__(**kwargs)
         Clock.schedule_interval(self.update_texture, 1.0 /30.0)
+    def _camera_loaded():
+        if platform == "android":
+            self.texture = Texture.create(size=self.resolution, colorfmt='rgba')
+            self.texture_size = list(self.texture.size)
+        else:
+            self.texture = self._camera.texture
+            self.texture_size = list(self.texture.size)
 
-    def get_img(self,*l):
-        #print(self._camera._update)
-        #self._camera._update
-        self.image_bytes = self._camera.texture.pixels
-        return self.image_bytes
+    def update_texture(self,*l):
+        if platform == 'android':
+            buf = self._camera.grab_frame()
+            if buf is None:
+                return
+                self.frame = self._camera.decode_frame(buf)
+        else:
+            self.frame = self._camera._device.read()
 
-    def update_texture(self,dt):
-        if type(self.get_img()) == bool:
+        if type(self.frame) == bool:
             return
-        self.extract_frame()
+
+        #self.extract_frame()
         self.process_frame()
         self.display_frame()
 
-    def extract_frame(self):
-        self.frame = np.frombuffer(self.get_img(), np.uint8)
-        self.frame = self.frame.reshape((w, h, 4))
+    #def extract_frame(self):
+        #self.frame = np.frombuffer(self.frame, np.uint8)
+        #self.frame = self.frame.reshape((self.w,self.h, 4))
 
 
     def process_frame(self):
         self.frame = np.flip(self.frame, 0)
 
+
     def display_frame(self):
-        buf=self.frame.tostring()
-        self.texture = Texture.create(size=np.flip(self.camera_resolution), colorfmt='rgba')
+        buf = self.frame.tobytes()
+        self.texture = Texture.create(size=np.flip(self.resolution), colorfmt='rgba')
         self.texture.blit_buffer(buf, colorfmt='rgba', bufferfmt='ubyte')
 
 

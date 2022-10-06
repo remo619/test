@@ -1,11 +1,37 @@
 MDScreen:
-    BoxLayout:
+    MDBoxLayout:
         orientation:"vertical"
+        spacing:10
+
         MDTopAppBar:
             title:"See with Ears"
             left_action_items: [["menu", lambda x:nav_draw.set_state()]]
             elevation: 10
-        Widget:
+        AndroidCam:
+            index: 0
+            resolution: self.camera_resolution
+            allow_stretch: True
+            play: True
+        MDBoxLayout:
+            orientation:"horizontal"
+            spacing:15
+            padding:10,0,10,10
+            adaptive_height:False
+            MDRectangleFlatIconButton:
+                icon: "signal-distance-variant"
+                text:"Estimate Distance"
+                text_color: "black"
+
+                icon_color: "orange"
+                line_color: "green"
+            MDRectangleFlatIconButton:
+                icon: "exit-to-app"
+                text:"Exit"
+                text_color: "black"
+                line_color: "red"
+
+                icon_color: "orange"
+
 
     MDNavigationDrawer:
         id: nav_draw

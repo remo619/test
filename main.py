@@ -36,8 +36,8 @@ class AndroidCam(Camera):
     def frame_from_buf(self):
         w, h = self.resolution
         frame = np.frombuffer(self._camera._buffer.tostring(), 'uint8').reshape((h + h // 2, w))
-        #frame_bgr = cv2.cvtColor(frame, 93)
-        return frame
+        frame_bgr = cv2.cvtColor(frame, 93)
+        return np.rot90(frame_bgr, 3)
 
     def frame_to_screen(self, frame):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

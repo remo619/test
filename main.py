@@ -7,7 +7,9 @@ from kivymd.uix.toolbar.toolbar import MDTopAppBar
 from datetime import datetime as dt
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.uix.camera import Camera
+#from kivy.uix.camera import Camera
+import numpy as np
+from kivy_garden.xcamera import XCamera
 from kivy.graphics.texture import Texture
 import cv2
 if platform=="android":
@@ -18,32 +20,38 @@ if platform=="android":
         Permission.READ_EXTERNAL_STORAGE
     ])
 
-class AndroidCam(Camera):
-    camera_resolution = (640,480)
+class AndroidCam(XCamera):
+    camera_resolution = w,h =(640,480)
 
-    def _camera_loaded(self, *largs):
-        self.texture = Texture.create(size=np.flip(self.camera_resolution), colorfmt='rgb')
-        self.texture_size = list(self.texture.size)
+    def __init__(self,**kwargs):
+        super(AndroidCam,self).__init__(**kwargs)
+        Clock.schedule_interval(self.update_texture, 1.0 /30.0)
 
-    def on_tex(self, *l):
-        super(AndroidCam, self).on_tex(*l)
-        if self._camera._buffer is None:
-            return None
-        frame = self.frame_from_buf()
-        self.frame_to_screen(frame)
+    def get_img(self,*l):
+        #print(self._camera._update)
+        #self._camera._update
+        self.image_bytes = self._camera.texture.pixels
+        return self.image_bytes
+
+    def update_texture(self,dt):
+        if type(self.get_img()) == bool:
+            return
+        self.extract_frame()
+        self.process_frame()
+        self.display_frame()
+
+    def extract_frame(self):
+        self.frame = np.frombuffer(self.get_img(), np.uint8)
+        self.frame = self.frame.reshape((w, h, 4))
 
 
-    def frame_from_buf(self):
-        w, h = self.resolution
-        frame = np.frombuffer(self._camera._buffer.tostring(), 'uint8').reshape((h + h // 2, w))
-        frame_bgr = cv2.cvtColor(frame, 93)
-        return np.rot90(frame_bgr, 3)
+    def process_frame(self):
+        self.frame = np.flip(self.frame, 0)
 
-    def frame_to_screen(self, frame):
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        flipped = np.flip(frame_rgb, 0)
-        buf = flipped.tostring()
-        self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
+    def display_frame(self):
+        buf=self.frame.tostring()
+        self.texture = Texture.create(size=np.flip(self.camera_resolution), colorfmt='rgba')
+        self.texture.blit_buffer(buf, colorfmt='rgba', bufferfmt='ubyte')
 
 
 class CamApp(MDApp):
@@ -54,9 +62,8 @@ class CamApp(MDApp):
         Screen = Builder.load_file("GUI.kv")
         return Screen
     def close_application(self):
-        # closing application
+        # closing applicatio
         MDApp.get_running_app().stop()
-        # removing window
         Window.close()
 if __name__ == '__main__':
     CamApp().run()

@@ -8,21 +8,29 @@ MDScreen:
             left_action_items: [["menu", lambda x:nav_draw.set_state()]]
             elevation: 10
         AndroidCam:
+            id:cam
             index: 0
             resolution: self.resolution
             allow_stretch: True
             play: True
+        MDLabel:
+            text: root.ids.cam.text
+            halign:"center"
+            font_style: "Subtitle2"
         MDBoxLayout:
             orientation:"horizontal"
             spacing:15
             padding:10,0,10,10
             adaptive_height:False
+
             MDRectangleFlatIconButton:
                 icon: "signal-distance-variant"
                 text:"Estimate Distance"
                 text_color: "black"
                 icon_color: "orange"
                 line_color: "green"
+                on_release: root.ids.cam.get_distance()
+
             MDRectangleFlatIconButton:
                 icon: "exit-to-app"
                 text:"Exit"
@@ -30,6 +38,7 @@ MDScreen:
                 line_color: "red"
                 icon_color: "orange"
                 on_release: app.close_application()
+
 
 
     MDNavigationDrawer:

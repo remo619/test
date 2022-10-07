@@ -9,7 +9,7 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.camera import Camera
 import numpy as np
-#from kivy_garden.xcamera import XCamera
+from kivy.logger import Logger
 from kivy.graphics.texture import Texture
 import cv2
 if platform=="android":
@@ -38,26 +38,22 @@ class AndroidCam(Camera):
         if platform == 'android':
             buf = self._camera.grab_frame()
             if buf is None:
+                Logger.info("Camera: No valid frame")
                 return
                 self.frame = self._camera.decode_frame(buf)
+                Logger.info(f"Camera: update texture")
         else:
             self.frame = self._camera._device.read()
-
-        if type(self.frame) == bool:
-            return
-
         #self.extract_frame()
         self.process_frame()
         self.display_frame()
+        super(AndroidCam, self).update_texture(*l)
 
     #def extract_frame(self):
         #self.frame = np.frombuffer(self.frame, np.uint8)
         #self.frame = self.frame.reshape((self.w,self.h, 4))
-
-
     def process_frame(self):
         self.frame = np.flip(self.frame, 0)
-
 
     def display_frame(self):
         buf = self.frame.tobytes()
@@ -73,8 +69,9 @@ class CamApp(MDApp):
         Screen = Builder.load_file("GUI.kv")
         return Screen
     def close_application(self):
-        # closing applicatio
         MDApp.get_running_app().stop()
         Window.close()
+        Logger.info("Application Closed")
+
 if __name__ == '__main__':
     CamApp().run()

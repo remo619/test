@@ -72,7 +72,7 @@ orientation = portrait
 fullscreen = 0
 
 # (list) Permissions
-android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+android.permissions = CAMERA
 
 # (int) Android API to use
 #android.api = 19

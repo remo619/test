@@ -15,9 +15,9 @@ import cv2
 if platform=="android":
     from android.permissions import request_permissions, Permission
     request_permissions([
-        Permission.CAMERA,
-        Permission.WRITE_EXTERNAL_STORAGE,
-        Permission.READ_EXTERNAL_STORAGE
+        Permission.CAMERA
+        #Permission.WRITE_EXTERNAL_STORAGE,
+        #Permission.READ_EXTERNAL_STORAGE
     ])
 
 class AndroidCam(Camera):
@@ -40,25 +40,23 @@ class AndroidCam(Camera):
             if buf is None:
                 Logger.info("Camera: No valid frame")
                 return
-                self.frame = self._camera.decode_frame(buf)
-                Logger.info(f"Camera: update texture")
+            frame = self._camera.decode_frame(buf)
+            Logger.info(f"Camera: update texture")
         else:
-            self.frame = self._camera._device.read()
+            frame = self._camera._device.read()
         #self.extract_frame()
-        self.process_frame()
+        self.process_frame(frame)
         self.display_frame()
-        super(AndroidCam, self).update_texture(*l)
 
     #def extract_frame(self):
         #self.frame = np.frombuffer(self.frame, np.uint8)
         #self.frame = self.frame.reshape((self.w,self.h, 4))
-    def process_frame(self):
-        self.frame = np.flip(self.frame, 0)
-
+    def process_frame(self,frame):
+        self.frame = np.flip(frame, 0)
     def display_frame(self):
         buf = self.frame.tobytes()
-        self.texture = Texture.create(size=np.flip(self.resolution), colorfmt='rgba')
-        self.texture.blit_buffer(buf, colorfmt='rgba', bufferfmt='ubyte')
+        self.texture = Texture.create(size=np.flip(self.resolution), colorfmt='rgb')
+        self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
 
 
 class CamApp(MDApp):

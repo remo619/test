@@ -40,7 +40,8 @@ class AndroidCam(Camera):
             if buf is None:
                 Logger.info("Camera: No valid frame")
                 return
-            frame = self._camera.decode_frame(buf)
+            frame = np.fromstring(buf, 'uint8').reshape(h + h // 2, w)
+            frame = cvtColor(frame, 93)
             Logger.info(f"Camera: update texture")
         else:
             frame = self._camera._device.read()

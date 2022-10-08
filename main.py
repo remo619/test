@@ -83,7 +83,7 @@ class CamApp(MDApp):
 
     def on_start(self, **kwargs):
         if platform=="android":
-            from android.permissions import request_permissions, check_permissions, Permission
+            from android.permissions import request_permissions, Permission
             request_permissions([Permission.CAMERA])
 
     def close_application(self):

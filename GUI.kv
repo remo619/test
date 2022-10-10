@@ -1,7 +1,7 @@
 MDScreen:
     MDBoxLayout:
         orientation:"vertical"
-        spacing:10
+        spacing:2
         id: box
         MDTopAppBar:
             title:"See with Ears"
@@ -10,16 +10,16 @@ MDScreen:
         AndroidCam:
             id:cam
             index: 0
-            resolution: self.resolution
+            resolution: (self.w, self.h)
             allow_stretch: True
             play: True
-            center: self.size and box.center
+
             size: box.height, box.width
             canvas.before:
                 PushMatrix
                 Rotate:
                     angle: -90
-                    origin:self.center
+                    origin: box.center
             canvas.after:
                 PopMatrix
         MDLabel:

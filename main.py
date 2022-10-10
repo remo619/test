@@ -44,10 +44,11 @@ class AndroidCam(Camera):
             buf = self._camera.grab_frame()
             if buf is None:
                 return
-            frame = np.fromstring(buf, 'uint8').reshape(self.h + self.h // 2, self.w)
+            frame = np.fromstring(buf, 'uint8').reshape(self.w, self.h)
             frame = cv2.cvtColor(frame, 93) #YUV to BGR NV21
         else:
             ret, frame = self._camera._device.read()
+            #cv2.imshow(f"{}")
         self.pre_process_frame(frame)
         self.process_frame(self.frame)
         self.display_frame()

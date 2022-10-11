@@ -16,7 +16,9 @@ import cv2
 from object_det import *
 from distance_estimation import *
 from say import *
-
+if platform == "android":
+    from android import loadingscreen
+    loadingscreen.hide_loading_screen()
 """
 class Distance(MDWidget):
     def __init__(self,**kwargs):
@@ -82,10 +84,20 @@ class CamApp(MDApp):
         Screen = Builder.load_file("GUI.kv")
         return Screen
 
-    def on_start(self, **kwargs):
+    def get_permissions(self,**kwargs):
+
         if platform=="android":
-            from android.permissions import request_permissions, Permission
+            from android.permissions import request_permissions, check_permissions, Permission
             request_permissions([Permission.CAMERA])
+            if check_permissions(Permisssion.CAMERA):
+                pass
+            else:
+                get_permissions()
+        else:
+            print("whassup bro")
+
+    def on_start(self, **kwargs):
+        get_permissions()
 
     def close_application(self):
         MDApp.get_running_app().stop()

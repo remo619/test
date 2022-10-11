@@ -13,15 +13,8 @@ MDScreen:
             resolution: (self.w, self.h)
             allow_stretch: True
             play: True
+            size: (box.width, box.height)
 
-            size: box.height, box.width
-            canvas.before:
-                PushMatrix
-                Rotate:
-                    angle: -90
-                    origin: box.center
-            canvas.after:
-                PopMatrix
         MDLabel:
             text: root.ids.cam.text
             halign:"center"
